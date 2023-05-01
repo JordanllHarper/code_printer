@@ -1,17 +1,20 @@
 pub mod write_to_word_doc_mod {
 
-    use docx::document::Paragraph;
-    use docx::Docx;
-    use docx::DocxError;
-    pub fn write_to_word_doc(filename: &str, contents: &str) -> Result<String, DocxError> {
-        let mut docx = Docx::default();
+    use docx_rs::*;
 
-        let paragraph = Paragraph::default().push_text(contents);
-        docx.document.push(paragraph);
-        let result = docx.write_file(filename);
-        match result {
-            Ok(_) => return Ok("Written code to ".to_owned() + filename),
-            Err(e) => return Err(e),
-        }
+    pub fn write_to_word_doc(path: &str, contents: &str) -> String {
+        let _path = std::path::Path::new(path);
+        let file = std::fs::File::create(_path).unwrap();
+        let para = Paragraph::new().add_run(
+            Run::new()
+                .add_text(contents)
+                .fonts(RunFonts::new().ascii("Courier New")),
+        );
+        let result = Docx::new().add_paragraph(para).build().pack(file);
+
+        return match result {
+            Ok(_) => "Successful write".to_string(),
+            Err(_) => "Not successful write".to_string(),
+        };
     }
 }

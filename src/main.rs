@@ -19,19 +19,26 @@ fn main() -> std::io::Result<()> {
             return Err(e);
         }
     };
-    println!("Searching {}", path);
-    let contents =
-        match read_file::read_file_mod::read_files_recursively(&path, "txt", "assign_inc") {
-            Ok(contents) => contents,
-            Err(_) => "Error".to_string(),
-        };
+    let file_type_to_search = &args[2];
 
-    let result = write_to_word_doc("output.docx", &contents);
-
-    match result {
-        Ok(c) => println!("{}", c),
-        Err(_) => println!("Something went wrong..."),
+    let mut path_to_save = ".";
+    if args.len() == 4 {
+        path_to_save = &args[3];
     }
+
+    println!("Searching {}", path);
+    let contents = match read_file::read_file_mod::read_files_recursively(
+        &path,
+        file_type_to_search,
+        "assign_inc",
+    ) {
+        Ok(contents) => contents,
+        Err(_) => "Error".to_string(),
+    };
+
+    let result = write_to_word_doc(&(path_to_save.to_string() + "/output.docx"), &contents);
+
+    println!("{}", result);
 
     Ok(())
 }
