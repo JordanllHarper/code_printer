@@ -1,6 +1,10 @@
 # Code Printer
 Code printer is a tool for scanning code and storing it in a docx file, written in Rust.
 
+## Setup
+Not much here except, in all directories you want to scan, make an 'assign_include.txt' file. 
+This tells code_printer to include all the contents in this directory in the final output file.
+
 ## Usage
 Clone the repo onto your computer, then run the exe in the terminal with the following arguments:
 
@@ -8,7 +12,7 @@ Clone the repo onto your computer, then run the exe in the terminal with the fol
 	 - the path to the directory. 
 	 - the file type (with no .)
  - Optional:
-	 - the path to save to. 
+	 - the path to save to. By default it will be where you ran the exe.
 
 For example, to scan for rust files in a directory on macOS, run:
 path/to/code_printer path/to/my/directory rs path/to/save/to
