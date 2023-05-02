@@ -15,7 +15,7 @@ Clone the repo onto your computer, then run the exe in the terminal with the fol
 	 - the path to save to. By default it will be where you ran the exe.
 
 For example, to scan for rust files in a directory on macOS, run:
-```bash
+```console
 path/to/code_printer path/to/my/directory rs path/to/save/to
 ```
 
