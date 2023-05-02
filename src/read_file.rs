@@ -2,7 +2,7 @@ pub mod read_file_mod {
 
     use std::{
         fs,
-        io::{self, BufRead},
+        io::{self, BufRead, Error},
     };
 
     fn read_lines_in_file(filename: &str) -> Result<String, std::io::Error> {
@@ -19,8 +19,8 @@ pub mod read_file_mod {
         Ok(complete_line)
     }
 
-    fn get_paths(dir_path: &str) -> fs::ReadDir {
-        fs::read_dir(dir_path).unwrap()
+    fn get_paths(dir_path: &str) -> Result<fs::ReadDir, Error> {
+        fs::read_dir(dir_path)
     }
 
     fn file_is_dir(dir_path: &str, desired_file_extension: &str, file_include_sig: &str) -> String {
@@ -37,7 +37,10 @@ pub mod read_file_mod {
     ) -> Result<String, std::io::Error> {
         let mut content = String::new();
 
-        let paths = get_paths(dir_path);
+        let paths = match get_paths(dir_path) {
+            Ok(c) => c,
+            Err(e) => return Err(e),
+        };
         let mut include_content = false;
 
         for path in paths {

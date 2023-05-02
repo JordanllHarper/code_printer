@@ -12,6 +12,11 @@ fn build_start_path(start_dir: &str) -> Result<String, std::io::Error> {
 
 fn main() -> std::io::Result<()> {
     let args: Vec<String> = env::args().collect();
+
+    if args.len() < 3 {
+        println!("CODE PRINTER: => Invalid number of arguments\nFormat is: '[os_dependent_exe_file_run]\n [path/to/start_dir]\n [file_type_to_write e.g. txt or rs]\n [opt: dir/to/save]' ");
+        return Ok(());
+    }
     let path = match build_start_path(&args[1]) {
         Ok(c) => c.to_string(),
         Err(e) => {
@@ -19,6 +24,7 @@ fn main() -> std::io::Result<()> {
             return Err(e);
         }
     };
+
     let file_type_to_search = &args[2];
 
     let mut path_to_save = ".";
@@ -33,7 +39,7 @@ fn main() -> std::io::Result<()> {
         "assign_inc",
     ) {
         Ok(contents) => contents,
-        Err(_) => "Error".to_string(),
+        Err(e) => return Err(e),
     };
 
     let result = write_to_word_doc(&(path_to_save.to_string() + "/output.docx"), &contents);
