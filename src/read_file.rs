@@ -1,7 +1,7 @@
 pub mod read_file_mod {
 
     use std::{
-        fs,
+        fs::{self, ReadDir},
         io::{self, BufRead, Error},
     };
 
@@ -41,15 +41,20 @@ pub mod read_file_mod {
             Ok(c) => c,
             Err(e) => return Err(e),
         };
-        let mut include_content = false;
 
         for path in paths {
-            let path = path.unwrap();
+            let path = match path {
+                Ok(p) => p,
+                Err(e) => return Err(e),
+            };
             println!("Searching {}", path.path().display());
-            let file_type = &path.file_type().unwrap();
+            let file_type = match path.file_type() {
+                Ok(f) => f,
+                Err(e) => return Err(e),
+            };
 
             if file_type.is_dir() {
-                content += &file_is_dir(
+                let content_from_dir = &file_is_dir(
                     &path.path().to_str().unwrap(),
                     desired_file_extension,
                     file_include_sig,
@@ -60,7 +65,6 @@ pub mod read_file_mod {
 
                 if file_split[0] == file_include_sig {
                     print!("Including content in directory!\n");
-                    include_content = true;
                 }
 
                 if file_split[1] == desired_file_extension {
@@ -70,14 +74,6 @@ pub mod read_file_mod {
                 }
             }
         }
-
-        match include_content {
-            true => Ok(content),
-            false => {
-                println!("Not including content...");
-
-                Ok("".to_string())
-            }
-        }
+        Ok("".to_string())
     }
 }
