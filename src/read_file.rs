@@ -59,6 +59,7 @@ pub mod read_file_mod {
                     desired_file_extension,
                     file_include_sig,
                 );
+                content += content_from_dir;
             } else {
                 let file_name = &path.file_name();
                 let file_split: Vec<&str> = file_name.to_str().unwrap().split(".").collect();
