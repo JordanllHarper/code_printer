@@ -1,7 +1,11 @@
 use std::env;
 
-use crate::write_to_word_doc::write_to_word_doc_mod::write_to_word_doc;
+use crate::{
+    read_file::read_file_mod::read_files,
+    write_to_word_doc::write_to_word_doc_mod::write_to_word_doc,
+};
 
+mod NodeResult;
 mod read_file;
 mod write_to_word_doc;
 
@@ -33,14 +37,10 @@ fn main() -> std::io::Result<()> {
     }
 
     println!("Searching {}", path);
-    let contents = match read_file::read_file_mod::read_files_recursively(
-        &path,
-        file_type_to_search,
-        "assign_inc",
-    ) {
+    let contents = match read_files(&path, file_type_to_search, "assign_inc") {
         Ok(contents) => contents,
         Err(e) => return Err(e),
-    };
+    }.contents;
 
     let result = write_to_word_doc(&(path_to_save.to_string() + "/output.docx"), &contents);
 
