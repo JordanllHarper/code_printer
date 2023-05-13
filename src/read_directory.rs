@@ -1,8 +1,7 @@
-pub mod read_directory_mod{
-
+pub mod read_directory_mod {
     use std::fs;
     use crate::node_result::node_result::NodeResult;
-    use crate::read_file::read_file_mod;
+
     use crate::read_file::read_file_mod::iterate_paths;
 
     //Entry point + called recursively until all content collected
@@ -21,18 +20,16 @@ pub mod read_directory_mod{
         };
 
 
-        let found_content = match iterate_paths(paths, desired_file_extension, file_include_sig) {
-            Ok(r) => {
-                collector_result.include_content = r.include_content;
-                r
-            }
+        let content_in_paths = match iterate_paths(paths, desired_file_extension, file_include_sig) {
+            Ok(r) => r,
             Err(_) => NodeResult::new(),
         };
 
+        collector_result.include_content = content_in_paths.include_content;
+
         //add the contents to this collector result
-        collector_result.contents += &found_content.contents;
-        //if we want to include the content in this result, propagate up true
-        if collector_result.include_content {
+        if content_in_paths.include_content {
+            collector_result.contents += &content_in_paths.contents;
             return Ok(collector_result);
         }
 

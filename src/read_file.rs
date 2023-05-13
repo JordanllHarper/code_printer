@@ -4,8 +4,7 @@ pub mod read_file_mod {
         io::{self, BufRead, Error},
     };
     use std::fs::DirEntry;
-    use std::io::Read;
-    use std::path::PathBuf;
+
 
     use crate::node_result::node_result::NodeResult;
     use crate::read_directory::read_directory_mod::read_from_dir;
@@ -23,7 +22,6 @@ pub mod read_file_mod {
         }
         Ok(complete_line)
     }
-
 
 
     //handles the case where a file isn't a directory
@@ -76,10 +74,12 @@ pub mod read_file_mod {
 
             //add all the contents of the child to this node result
             each_path_node_collector.contents +=
+                //the recursive call back to read_from_dir
                 &match read_from_dir(path_str, desired_file_extension, file_include_sig) {
                     Ok(c) => c.contents,
                     Err(_) => "".to_string(),
                 };
+
         } else {
             //check if the file is the marking file for including content in the directory
             if delimit[0] == file_include_sig {
@@ -105,7 +105,7 @@ pub mod read_file_mod {
         paths: ReadDir,
         desired_file_extension: &str,
         file_include_sig: &str,
-    ) -> Result<NodeResult, Error> {
+    ) -> NodeResult {
         //Define an initial collector result for this parse
         let mut collector_result = NodeResult::new();
 
@@ -114,8 +114,10 @@ pub mod read_file_mod {
                 path,
                 desired_file_extension,
                 file_include_sig) {
+
                 Some(c) => c,
                 None => continue,
+
             };
 
             collector_result.include_content = node_result.include_content;
@@ -123,6 +125,6 @@ pub mod read_file_mod {
                 collector_result.contents += &node_result.contents
             }
         }
-        Ok(collector_result)
+        return collector_result;
     }
 }
