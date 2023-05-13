@@ -1,13 +1,14 @@
 use std::env;
 
 use crate::{
-    read_file::read_file_mod::read_files,
     write_to_word_doc::write_to_word_doc_mod::write_to_word_doc,
 };
+use crate::read_directory::read_directory_mod::read_from_dir;
 
-mod NodeResult;
+mod node_result;
 mod read_file;
 mod write_to_word_doc;
+mod read_directory;
 
 fn build_start_path(start_dir: &str) -> Result<String, std::io::Error> {
     let path = start_dir.to_owned() + "/";
@@ -37,7 +38,7 @@ fn main() -> std::io::Result<()> {
     }
 
     println!("Searching {}", path);
-    let contents = match read_files(&path, file_type_to_search, "assign_inc") {
+    let contents = match read_from_dir(&path, file_type_to_search, "assign_inc") {
         Ok(contents) => contents,
         Err(e) => return Err(e),
     }.contents;
