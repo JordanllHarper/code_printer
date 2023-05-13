@@ -20,15 +20,13 @@ pub mod read_directory_mod {
         };
 
 
-        let content_in_paths = match iterate_paths(paths, desired_file_extension, file_include_sig) {
-            Ok(r) => r,
-            Err(_) => NodeResult::new(),
-        };
+        let content_in_paths = iterate_paths(paths, desired_file_extension, file_include_sig);
+        println!("Content in paths is {}", content_in_paths.contents);
 
-        collector_result.include_content = content_in_paths.include_content;
 
         //add the contents to this collector result
         if content_in_paths.include_content {
+            collector_result.include_content = true;
             collector_result.contents += &content_in_paths.contents;
             return Ok(collector_result);
         }
