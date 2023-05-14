@@ -1,6 +1,7 @@
 pub mod path_handling_mod{
     use std::fs::{DirEntry, ReadDir};
     use std::io::Error;
+    use crate::logger::logger_mod::{log, log_found_include, log_scan};
     use crate::node_result::node_result::NodeResult;
     use crate::read_directory::read_directory_mod::read_from_dir;
     use crate::read_file::read_file_mod::handle_non_dir;
@@ -12,7 +13,8 @@ pub mod path_handling_mod{
             Err(_) => return None,
         }
             .path();
-        println!("CODE PRINTER: SCANNING => {}", path.to_str().unwrap_or_default());
+
+        log_scan(&path.to_str().unwrap_or_default());
 
 
         if path.is_dir() {
@@ -43,7 +45,7 @@ pub mod path_handling_mod{
 
             //check if the file is the marking file for including content in the directory
             if delimit[0] == file_include_sig {
-                println!("CODE PRINTER: FOUND AN INCLUDE FILE");
+                log_found_include();
                 each_path_node_collector.include_content = true
             }
             let path = match path.to_str() {

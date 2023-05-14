@@ -11,6 +11,8 @@ mod write_to_word_doc;
 mod read_directory;
 mod file_io;
 mod path_handling;
+mod logger;
+
 
 fn build_start_path(start_dir: &str) -> Result<String, std::io::Error> {
     let path = start_dir.to_owned() + "/";
