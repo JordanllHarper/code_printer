@@ -59,7 +59,8 @@ pub mod read_file_mod {
         }
             .path();
 
-        let delimit: Vec<&str> = path
+        let delimit: Vec<&str> = path.file_name()
+            .unwrap_or_default()
             .to_str()
             .unwrap_or_default()
             .split(".")
@@ -75,12 +76,17 @@ pub mod read_file_mod {
 
             println!("Reading {}", path_str);
             //add all the contents of the child to this node result
-            each_path_node_collector.contents +=
                 //the recursive call back to read_from_dir
-                &match read_from_dir(path_str, desired_file_extension, file_include_sig) {
-                    Ok(c) => c.contents,
-                    Err(_) => "".to_string(),
+               let read_dir_result =  &match read_from_dir(path_str, desired_file_extension, file_include_sig) {
+                    Ok(c) => c,
+                    Err(_) => NodeResult::new(),
                 };
+
+            if read_dir_result.include_content{
+                each_path_node_collector.include_content = true;
+                each_path_node_collector.contents += &read_dir_result.contents;
+            }
+
         } else {
             //check if the file is the marking file for including content in the directory
             if delimit[0] == file_include_sig {
@@ -99,6 +105,7 @@ pub mod read_file_mod {
 
             each_path_node_collector.contents += &file_content;
         }
+        println!("Contents in path node collector is {}", each_path_node_collector.contents);
         Some(each_path_node_collector)
     }
 
@@ -120,13 +127,14 @@ pub mod read_file_mod {
                 None => continue,
             };
 
-            if node_result.include_content {
-                println!("Contents for node result is {}", &node_result.contents);
-                collector_result.contents += &node_result.contents;
 
+            println!("Include content here is {}",node_result.include_content );
+            collector_result.contents += &node_result.contents;
+            if node_result.include_content {
                 collector_result.include_content = true;
             }
         }
+        println!("At the end of this iteration, contents included was set to: {}", collector_result.include_content);
         return collector_result;
     }
 }

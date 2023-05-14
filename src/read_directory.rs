@@ -28,6 +28,7 @@ pub mod read_directory_mod {
         if content_in_paths.include_content {
             collector_result.include_content = true;
             collector_result.contents += &content_in_paths.contents;
+            println!("Included contents at the read_dir level");
             return Ok(collector_result);
         }
 
