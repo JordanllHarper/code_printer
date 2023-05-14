@@ -2,7 +2,7 @@ pub mod read_directory_mod {
     use std::fs;
     use crate::node_result::node_result::NodeResult;
 
-    use crate::read_file::read_file_mod::iterate_paths;
+    use crate::read_file::path_handling::iterate_paths;
 
     //Entry point + called recursively until all content collected
     pub fn read_from_dir(

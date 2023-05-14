@@ -1,27 +1,15 @@
-pub mod read_file_mod {
-    use std::{
-        fs::{self, ReadDir},
-        io::{self, BufRead, Error},
-    };
+pub mod path_handling {
+
+    use std::fs::ReadDir;
+    use std::io::Error;
     use std::fs::DirEntry;
 
 
     use crate::node_result::node_result::NodeResult;
     use crate::read_directory::read_directory_mod::read_from_dir;
+    use crate::file_io::file_io_mod::read_lines_in_file;
 
-    fn read_lines_in_file(filename: &str) -> Result<String, Error> {
-        let file = fs::File::open(filename)?;
-        let lines = io::BufReader::new(file).lines();
 
-        let mut complete_line = String::new();
-
-        for line in lines {
-            if let Ok(_line) = line {
-                complete_line.push_str(&_line);
-            }
-        }
-        Ok(complete_line)
-    }
 
 
     //handles the case where a file isn't a directory
@@ -60,7 +48,6 @@ pub mod read_file_mod {
         println!("CODE PRINTER: SCANNING => {}", path.to_str().unwrap_or_default());
 
 
-
         if path.is_dir() {
             let path_str = match path
                 .to_str() {
@@ -69,17 +56,16 @@ pub mod read_file_mod {
             };
 
             //add all the contents of the child to this node result
-                //the recursive call back to read_from_dir
-               let read_dir_result =  &match read_from_dir(path_str, desired_file_extension, file_include_sig) {
-                    Ok(c) => c,
-                    Err(_) => NodeResult::new(),
-                };
+            //the recursive call back to read_from_dir
+            let read_dir_result = &match read_from_dir(path_str, desired_file_extension, file_include_sig) {
+                Ok(c) => c,
+                Err(_) => NodeResult::new(),
+            };
 
-            if read_dir_result.include_content{
+            if read_dir_result.include_content {
                 each_path_node_collector.include_content = true;
                 each_path_node_collector.contents += &read_dir_result.contents;
             }
-
         } else {
             let delimit: Vec<&str> = path.file_name()
                 .unwrap_or_default()
@@ -122,7 +108,6 @@ pub mod read_file_mod {
                 path,
                 desired_file_extension,
                 file_include_sig) {
-
                 Some(c) => c,
                 None => continue,
             };
