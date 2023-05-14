@@ -37,14 +37,14 @@ fn main() -> std::io::Result<()> {
         path_to_save = &args[3];
     }
 
-    println!("Searching {}", path);
     let result = match read_from_dir(&path, file_type_to_search, "assign_inc") {
         Ok(contents) => contents,
         Err(e) => return Err(e),
     };
 
+    println!("CODE PRINTER: ||| REPORT |||");
     if !result.include_content{
-        println!("Found no assign_inc files so nothing is written .");
+        println!("===> Didn't find an include file so nothing was done.");
         return Ok(());
     }
 
@@ -52,11 +52,14 @@ fn main() -> std::io::Result<()> {
 
 
     if contents.trim().is_empty() {
-        println!("No contents to print so not creating the file.");
+        println!("===> Found an include file, but the resulting contents was empty, so nothing was done.");
         return Ok(());
     }
-    write_to_word_doc(&(path_to_save.to_string() + "/output.docx"), &contents);
+    let write_path = &(path_to_save.to_string() + "/output.docx");
+    write_to_word_doc(write_path, &contents);
 
+    println!("===> Found an include file and some contents!");
+    println!("===> Contents saved to the path: {}", write_path);
 
     Ok(())
 }

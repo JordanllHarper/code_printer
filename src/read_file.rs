@@ -57,13 +57,8 @@ pub mod read_file_mod {
             Err(_) => return None,
         }
             .path();
+        println!("CODE PRINTER: SCANNING => {}", path.to_str().unwrap_or_default());
 
-        let delimit: Vec<&str> = path.file_name()
-            .unwrap_or_default()
-            .to_str()
-            .unwrap_or_default()
-            .split(".")
-            .collect();
 
 
         if path.is_dir() {
@@ -86,8 +81,16 @@ pub mod read_file_mod {
             }
 
         } else {
+            let delimit: Vec<&str> = path.file_name()
+                .unwrap_or_default()
+                .to_str()
+                .unwrap_or_default()
+                .split(".")
+                .collect();
+
             //check if the file is the marking file for including content in the directory
             if delimit[0] == file_include_sig {
+                println!("CODE PRINTER: FOUND AN INCLUDE FILE");
                 each_path_node_collector.include_content = true
             }
             let path = match path.to_str() {
@@ -130,7 +133,6 @@ pub mod read_file_mod {
                 collector_result.include_content = true;
             }
         }
-        println!("At the end of this iteration, contents included was set to: {}", collector_result.include_content);
         return collector_result;
     }
 }
