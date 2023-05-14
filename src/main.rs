@@ -38,14 +38,25 @@ fn main() -> std::io::Result<()> {
     }
 
     println!("Searching {}", path);
-    let contents = match read_from_dir(&path, file_type_to_search, "assign_inc") {
+    let result = match read_from_dir(&path, file_type_to_search, "assign_inc") {
         Ok(contents) => contents,
         Err(e) => return Err(e),
-    }.contents;
+    };
 
+    if !result.include_content{
+        println!("Found no assign_inc files so nothing is written .");
+        return Ok(());
+    }
+
+    let contents = result.contents;
+
+
+    if contents.trim().is_empty() {
+        println!("No contents to print so not creating the file.");
+        return Ok(());
+    }
     let result = write_to_word_doc(&(path_to_save.to_string() + "/output.docx"), &contents);
 
-    println!("{}", result);
 
     Ok(())
 }

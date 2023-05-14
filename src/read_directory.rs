@@ -21,7 +21,6 @@ pub mod read_directory_mod {
 
 
         let content_in_paths = iterate_paths(paths, desired_file_extension, file_include_sig);
-        println!("Content in paths is {}", content_in_paths.contents);
 
 
         //add the contents to this collector result

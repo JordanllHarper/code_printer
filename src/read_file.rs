@@ -43,7 +43,6 @@ pub mod read_file_mod {
         }
 
         //we passed all the guard clauses and we care about this file
-        println!("Including {} in write", path);
         match read_lines_in_file(path) {
             Ok(c) => Some(c),
             Err(_) => None,
@@ -74,7 +73,6 @@ pub mod read_file_mod {
                 None => return None,
             };
 
-            println!("Reading {}", path_str);
             //add all the contents of the child to this node result
                 //the recursive call back to read_from_dir
                let read_dir_result =  &match read_from_dir(path_str, desired_file_extension, file_include_sig) {
@@ -105,7 +103,6 @@ pub mod read_file_mod {
 
             each_path_node_collector.contents += &file_content;
         }
-        println!("Contents in path node collector is {}", each_path_node_collector.contents);
         Some(each_path_node_collector)
     }
 
@@ -128,7 +125,6 @@ pub mod read_file_mod {
             };
 
 
-            println!("Include content here is {}",node_result.include_content );
             collector_result.contents += &node_result.contents;
             if node_result.include_content {
                 collector_result.include_content = true;
