@@ -55,7 +55,7 @@ fn main() -> std::io::Result<()> {
         println!("No contents to print so not creating the file.");
         return Ok(());
     }
-    let result = write_to_word_doc(&(path_to_save.to_string() + "/output.docx"), &contents);
+    write_to_word_doc(&(path_to_save.to_string() + "/output.docx"), &contents);
 
 
     Ok(())
