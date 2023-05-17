@@ -1,19 +1,13 @@
 pub mod file_io_mod {
-    use std::io::Error;
-    use std::{fs, io};
-    use std::io::BufRead;
+    use std::fs;
 
-    pub(crate) fn read_lines_in_file(filename: &str) -> Result<String, Error> {
-        let file = fs::File::open(filename)?;
-        let lines = io::BufReader::new(file).lines();
+    pub(crate) fn read_lines_in_file(filename: &str) -> Result<String, std::io::Error> {
+        let contents = match fs::read_to_string(filename) {
+            Ok(c) => c,
+            Err(e) => return Err(e),
+        };
 
-        let mut complete_line = String::new();
-
-        for line in lines {
-            if let Ok(_line) = line {
-                complete_line.push_str(&_line);
-            }
-        }
-        Ok(complete_line)
+        Ok(contents)
     }
 }
+

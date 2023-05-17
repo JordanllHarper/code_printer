@@ -1,18 +1,15 @@
 use std::env;
 
-use crate::{
-    write_to_word_doc::write_to_word_doc_mod::write_to_word_doc,
-};
 use crate::read_directory::read_directory_mod::read_from_dir;
+use crate::write_to_word_doc::write_to_word_doc_mod::write_to_word_doc;
 
+mod file_io;
+mod logger;
 mod node_result;
+mod path_handling;
+mod read_directory;
 mod read_file;
 mod write_to_word_doc;
-mod read_directory;
-mod file_io;
-mod path_handling;
-mod logger;
-
 
 fn build_start_path(start_dir: &str) -> Result<String, std::io::Error> {
     let path = start_dir.to_owned() + "/";
@@ -47,13 +44,12 @@ fn main() -> std::io::Result<()> {
     };
 
     println!("CODE PRINTER: ||| REPORT |||");
-    if !result.include_content{
+    if !result.include_content {
         println!("===> Didn't find an include file so nothing was done.");
         return Ok(());
     }
 
     let contents = result.contents;
-
 
     if contents.trim().is_empty() {
         println!("===> Found an include file, but the resulting contents was empty, so nothing was done.");
